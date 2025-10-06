@@ -14,7 +14,7 @@ aliases:
 A `firebird-sql` tool executes a pre-defined SQL statement against a Firebird
 database. It's compatible with the following source:
 
-- [firebird](../sources/firebird.md)
+- [firebird](../../sources/firebird.md)
 
 The specified SQL statement is executed as a [prepared statement][fb-prepare],
 and supports both positional parameters (`?`) and named parameters (`:param_name`).
