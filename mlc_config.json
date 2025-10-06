@@ -1,0 +1,63 @@
+{
+  "projectBaseUrl":"${workspaceFolder}",
+  "ignorePatterns": [
+    {
+      "pattern": "^http://example.net"
+    },
+    {
+      "pattern": "^http://example.com"
+    },
+    {
+        "pattern":"^https://dev.mysql.com"
+    },
+    {
+      "pattern": "^https://www.npmjs.com/package/@toolbox-sdk/core"
+    },
+   {
+    "pattern": "^https://www\\.npmjs\\.com"
+    },
+    {
+        "pattern": ":(5000|3000|7777|4318|8080)",
+        "comment": "Ignore URLs containing ports 5000, 3000, or 7777 (e.g., for local development or testing)"
+    }
+    ],
+  "replacementPatterns": [
+    {
+      "pattern": "^.attachments",
+      "replacement": "file://some/conventional/folder/.attachments"
+    },
+    {
+      "pattern": "^/",
+      "replacement": "{{BASEURL}}/"
+    },
+    {
+      "pattern": "%20",
+      "replacement": "-",
+      "global": true
+    },
+    {
+      "pattern": "images/(?<filename>.*)",
+      "replacement": "assets/$<filename>"
+    }
+  ],
+  "httpHeaders": [
+    {
+      "urls": ["https://example.com"],
+      "headers": {
+        "Authorization": "Basic Zm9vOmJhcg==",
+        "Foo": "Bar"
+      }
+    }, 
+  {
+    "urls": ["*"], 
+    "headers": {
+      "User-Agent": "GitHub-Action-Link-Checker (googleapis/genai-toolbox testing: test-broken-links; +https://github.com/googleapis/genai-toolbox)"
+    }
+  }
+  ],
+  "timeout": "20s",
+  "retryOn429": true,
+  "retryCount": 5,
+  "fallbackRetryDelay": "30s",
+  "aliveStatusCodes": [200, 206]
+}
