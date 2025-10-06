@@ -69,7 +69,7 @@ tools:
 > including identifiers, column names, and table names. **This makes it more
 > vulnerable to SQL injections**. Using basic parameters  only (see above) is
 > recommended for performance and safety reasons. For more details, please check
-> [templateParameters](_index#template-parameters).
+> [templateParameters](..#templage-parameters).
 
 ```yaml
 tools:
@@ -98,5 +98,5 @@ tools:
 | source             |                      string                      |     true     | Name of the source the SQL should execute on.                                                                                              |
 | description        |                      string                      |     true     | Description of the tool that is passed to the LLM.                                                                                         |
 | statement          |                      string                      |     true     | SQL statement to execute on.                                                                                                               |
-| parameters         |    [parameters](_index#specifying-parameters)    |    false     | List of [parameters](_index#specifying-parameters) that will be inserted into the SQL statement.                                           |
-| templateParameters | [templateParameters](_index#template-parameters) |    false     | List of [templateParameters](_index#template-parameters) that will be inserted into the SQL statement before executing prepared statement. |
+| parameters         |    [parameters](_..#specifying-parameters)    |    false     | List of [parameters](_..#specifying-parameters) that will be inserted into the SQL statement.                                           |
+| templateParameters | [templateParameters](..#templage-parameters) |    false     | List of [templateParameters](..#templage-parameters) that will be inserted into the SQL statement before executing prepared statement. |
