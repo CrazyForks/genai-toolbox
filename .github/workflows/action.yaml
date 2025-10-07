@@ -1,0 +1,11 @@
+on:
+  push
+
+name: Check markdown links
+jobs:
+  my-broken-link-checker:
+    name: Check broken links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for broken links
+        uses: ruzickap/action-my-broken-link-checker@v2
