@@ -4,8 +4,10 @@
     {
       "pattern": "^http://example.net"
     },{
-
-        "pattern": "^https://www\\.npmjs\\.com/package/@toolbox-sdk/core$"
+        "pattern": "^https?:\\/\\/\\(127\\.0\\.0\\.1\\|localhost\\)\\(:\\d+\\)?\\(\\/.*\\)?$"
+    },
+    {
+         "pattern": "^https:\\/\\/img\\.shields\\.io\\/.*"
     }
   ],
   "replacementPatterns": [
