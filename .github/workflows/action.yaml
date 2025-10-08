@@ -38,8 +38,3 @@ jobs:
           # 💡 Adding a custom User-Agent can help bypass blocks by external websites
           # USER_AGENT: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
           USER_AGENT: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
-
-        with:
-          # Optional: You can configure the timeout or number of retries here
-          max-retries: 3 
-          timeout: 120
