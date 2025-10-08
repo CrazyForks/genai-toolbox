@@ -1,14 +1,18 @@
 name: Markdown Link Check
 
 on:
+  # Triggers the workflow on pushes to main and master branches
   push:
-
+  
 jobs:
   markdown-link-check:
     name: Check Markdown Links
     runs-on: ubuntu-latest
     
-    
+    # 🔑 CORRECT PLACEMENT AND SCOPE FOR THE GITHUB_TOKEN
+    # Permissions MUST be defined at the job level. 
+    # Read access is sufficient for checking links.
+    # Write access is only needed if the job modifies the repo (e.g., creates a commit/issue/PR status).
     permissions:
       contents: read       # Only needs read access to check the files
       pull-requests: write # Recommended if the action updates PR status/checks
@@ -28,12 +32,9 @@ jobs:
           # This authenticates API calls and dramatically increases rate limits, 
           # often solving 403 errors when accessing GitHub links or hitting public rate limits.
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # 💡 Adding a custom User-Agent can help bypass blocks by external websites
+          USER_AGENT: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36'
         with:
           # Optional: You can configure the timeout or number of retries here
           max-retries: 3 
           timeout: 120
-
-
-### Summary of Fixes:
-
-
