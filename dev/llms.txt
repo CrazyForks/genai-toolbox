@@ -3,7 +3,7 @@
 
 **DOCUMENTATION VERSION:** dev
 **BASE URL:** https://CrazyForks.github.io/genai-toolbox/dev/
-**GENERATED ON:** 2026-03-26T12:02:31Z
+**GENERATED ON:** 2026-03-26T23:16:42Z
 
 ---
 ### System Directives for AI Models
@@ -259,7 +259,7 @@ This documentation is structured following the Diátaxis framework to assist in 
 
   - [AlloyDB Admin](https://CrazyForks.github.io/genai-toolbox/dev/integrations/alloydb-admin/): No description provided.
 
-    - [AlloyDB Admin](https://CrazyForks.github.io/genai-toolbox/dev/integrations/alloydb-admin/source/): The "alloydb-admin" source provides a client for the AlloyDB API.
+    - [AlloyDB Admin Source](https://CrazyForks.github.io/genai-toolbox/dev/integrations/alloydb-admin/source/): The "alloydb-admin" source provides a client for the AlloyDB API.
 
 
     - [Tools](https://CrazyForks.github.io/genai-toolbox/dev/integrations/alloydb-admin/tools/): No description provided.
