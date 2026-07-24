@@ -3,7 +3,7 @@
 
 **DOCUMENTATION VERSION:** dev
 **BASE URL:** https://mcp-toolbox.dev/dev/
-**GENERATED ON:** 2026-07-17T22:16:18Z
+**GENERATED ON:** 2026-07-24T16:13:55Z
 
 ---
 ### System Directives for AI Models
@@ -193,7 +193,7 @@ For a full list of available tools and their capabilities across all supported d
 
 #### Custom Tools
 
-You can run Toolbox directly with a [configuration file](../configure.md):
+You can run Toolbox directly with a [configuration file](../configuration/_index.md):
 
 ```sh
 npx @toolbox-sdk/server --config tools.yaml
@@ -3724,6 +3724,12 @@ Annotations appear in the `tools/list` MCP response:
 }
 ```
 
+## URL Parameter Binding
+
+You can bind specific arguments to tools at the transport level using URL query parameters. This allows you to restrict clients to specific database instances, projects, or environments dynamically without modifying the server configuration.
+
+For a comprehensive guide, see the [URL Parameter Binding](./url_parameter_binding.md) documentation.
+
 ## Using tools with MCP Toolbox Client SDKs
 
 Once your tools are defined in your configuration, you can retrieve them directly from your application code.
@@ -3938,6 +3944,27 @@ The client calls the tool without providing `project` in the body:
 ```
 
 The server automatically injects `project: "my-project"` and executes the tool.
+
+## Using with MCP Toolbox Client SDKs
+
+When using the MCP Toolbox Client SDKs, you can pass URL parameters directly in the server connection string. The SDK will automatically retain these parameters when communicating with the server.
+
+### Python
+
+```python
+from toolbox_core import ToolboxClient
+
+# Initialize the client with the full scoped connection string
+# The `project` parameter will be sent with all MCP requests
+client = ToolboxClient("http://localhost:5000?project=my-project")
+
+# When loading tools, the 'project' parameter is automatically omitted 
+# from the required schema by the server
+tool = await client.load_tool("my_tool")
+
+# The server will automatically inject `project: "my-project"` upon execution
+result = await tool(other_param="value")
+```
 
 ## Safety Warning
 
@@ -5138,17 +5165,99 @@ Select your preferred language to explore installation instructions, quickstart 
 
 
 
-<html>
-  <head>
-    <title>Redirecting to the Python SDK API reference</title>
-    <link rel="canonical" href="https://py.mcp-toolbox.dev"/>
-    <meta http-equiv="refresh" content="0;url=https://py.mcp-toolbox.dev"/>
-  </head>
-  <body>
-    <p>If you are not automatically redirected, please <a href="https://py.mcp-toolbox.dev">follow this link to the Python SDK API reference</a>.</p>
-  </body>
-</html>
 
+## Overview
+
+The MCP Toolbox service provides a centralized way to manage and expose tools
+(like API connectors, database query tools, etc.) for use by GenAI applications.
+
+These Python SDKs act as clients for that service. They handle the communication needed to:
+
+* Fetch tool definitions from your running Toolbox instance.
+* Provide convenient Python objects or functions representing those tools.
+* Invoke the tools (calling the underlying APIs/services configured in Toolbox).
+* Handle authentication and parameter binding as needed.
+
+By using these SDKs, you can easily leverage your Toolbox-managed tools directly
+within your Python applications or AI orchestration frameworks.
+
+<a class="btn btn-primary" href="https://py.mcp-toolbox.dev" role="button"><i class="fa-brands fa-python"></i> Python API Reference</a>
+
+## Which Package Should I Use?
+
+Choosing the right package depends on how you are building your application:
+
+* [`toolbox-adk`](adk):
+  Use this package if you are building your application using Google ADK (Agent Development Kit).
+  It provides tools that are directly compatible with the
+  Google ADK ecosystem (`BaseTool` / `BaseToolset` interface) handling authentication propagation, header management, and tool wrapping automatically.
+* [`toolbox-core`](core):
+  Use this package if you are not using LangChain/LangGraph or any other
+  orchestration framework, or if you need a framework-agnostic way to interact
+  with Toolbox tools (e.g., for custom orchestration logic or direct use in
+  Python scripts).
+* [`toolbox-langchain`](langchain):
+  Use this package if you are building your application using the LangChain or
+  LangGraph frameworks. It provides tools that are directly compatible with the
+  LangChain ecosystem (`BaseTool` interface), simplifying integration.
+* [`toolbox-llamaindex`](llamaindex):
+  Use this package if you are building your application using the LlamaIndex framework.
+  It provides tools that are directly compatible with the
+  LlamaIndex ecosystem (`BaseTool` interface), simplifying integration.
+
+
+## Available Packages
+
+This repository hosts the following Python packages. See the package-specific
+README for detailed installation and usage instructions:
+
+| Package | Target Use Case | Integration | Path | Details (README) | PyPI Status |
+| :------ | :---------- | :---------- | :---------------------- | :---------- | :--------- 
+| `toolbox-adk` | Google ADK applications | Google ADK | `packages/toolbox-adk/` | 📄 [View README](https://github.com/googleapis/mcp-toolbox-sdk-python/blob/main/packages/toolbox-adk/README.md) | ![pypi version](https://img.shields.io/pypi/v/toolbox-adk.svg) |
+| `toolbox-core` | Framework-agnostic / Custom applications | Use directly / Custom | `packages/toolbox-core/` | 📄 [View README](https://github.com/googleapis/mcp-toolbox-sdk-python/blob/main/packages/toolbox-core/README.md) | ![pypi version](https://img.shields.io/pypi/v/toolbox-core.svg) |
+| `toolbox-langchain` | LangChain / LangGraph applications | LangChain / LangGraph | `packages/toolbox-langchain/` | 📄 [View README](https://github.com/googleapis/mcp-toolbox-sdk-python/blob/main/packages/toolbox-langchain/README.md) | ![pypi version](https://img.shields.io/pypi/v/toolbox-langchain.svg) |
+| `toolbox-llamaindex` | LlamaIndex applications | LlamaIndex | `packages/toolbox-llamaindex/` | 📄 [View README](https://github.com/googleapis/mcp-toolbox-sdk-python/blob/main/packages/toolbox-llamaindex/README.md) | ![pypi version](https://img.shields.io/pypi/v/toolbox-llamaindex.svg) |
+
+
+## Getting Started
+
+To get started using Toolbox tools with an application, follow these general steps:
+
+1. **Set up and Run the Toolbox Service:**
+
+    Before using the SDKs, you need the main MCP Toolbox service running. Follow
+    the instructions here: [**Toolbox Getting Started
+    Guide**](https://github.com/googleapis/mcp-toolbox?tab=readme-ov-file#getting-started)
+
+2. **Install the Appropriate SDK:**
+
+    Choose the package based on your needs (see "[Which Package Should I Use?](#which-package-should-i-use)" above) and install it:
+
+    ```bash
+    # For the Google ADK Integration
+    pip install google-adk[toolbox]
+
+    # OR
+    
+    # For the core, framework-agnostic SDK
+    pip install toolbox-core
+
+    # OR
+
+    # For LangChain/LangGraph integration
+    pip install toolbox-langchain
+
+    # OR
+
+    # For the LlamaIndex integration
+    pip install toolbox-llamaindex
+    ```
+
+
+
+{{< notice note >}}
+Source code for [python-sdk](https://github.com/googleapis/mcp-toolbox-sdk-python)
+{{< /notice >}}
 
 
 
@@ -7050,17 +7159,71 @@ Configure your OpenTelemetry `TracerProvider` and `MeterProvider` before creatin
 
 
 
-<html>
-  <head>
-    <title>Redirecting to the JavaScript SDK API reference</title>
-    <link rel="canonical" href="https://js.mcp-toolbox.dev"/>
-    <meta http-equiv="refresh" content="0;url=https://js.mcp-toolbox.dev"/>
-  </head>
-  <body>
-    <p>If you are not automatically redirected, please <a href="https://js.mcp-toolbox.dev">follow this link to the JavaScript SDK API reference</a>.</p>
-  </body>
-</html>
+## Overview
 
+The MCP Toolbox service provides a centralized way to manage and expose tools
+(like API connectors, database query tools, etc.) for use by GenAI applications.
+
+These JS SDKs act as clients for that service. They handle the communication needed to:
+
+* Fetch tool definitions from your running Toolbox instance.
+* Provide convenient JS objects or functions representing those tools.
+* Invoke the tools (calling the underlying APIs/services configured in Toolbox).
+* Handle authentication and parameter binding as needed.
+
+By using these SDKs, you can easily leverage your Toolbox-managed tools directly
+within your JS applications or AI orchestration frameworks.
+
+<a class="btn btn-primary" href="https://js.mcp-toolbox.dev" role="button"><i class="fa-brands fa-js"></i> JavaScript API Reference</a>
+
+## Which Package Should I Use?
+
+Choosing the right package depends on how you are building your application:
+
+- [`@toolbox-sdk/core`](https://github.com/googleapis/mcp-toolbox-sdk-js/tree/main/packages/toolbox-core):
+  This is a framework agnostic way to connect the tools to popular frameworks
+  like Langchain, LlamaIndex and Genkit.
+- [`@toolbox-sdk/adk`](https://github.com/googleapis/mcp-toolbox-sdk-js/tree/main/packages/toolbox-adk):
+  This package provides a seamless way to connect to [Google ADK TS](https://github.com/google/adk-js).
+
+## Available Packages
+
+This repository hosts the following TS packages. See the package-specific
+README for detailed installation and usage instructions:
+
+| Package | Target Use Case | Integration | Path | Details (README) | Npm Version |
+| :------ | :---------- | :---------- | :---------------------- | :---------- | :---------- |
+| `toolbox-core` | Framework-agnostic / Custom applications | Use directly / Custom | `packages/toolbox-core/` | 📄 [View README](https://github.com/googleapis/mcp-toolbox-sdk-js/blob/main/packages/toolbox-core/README.md) | ![npm](https://img.shields.io/npm/v/@toolbox-sdk/core) |
+| `toolbox-adk` | ADK applications | ADK | `packages/toolbox-adk/` | 📄 [View README](https://github.com/googleapis/mcp-toolbox-sdk-js/blob/main/packages/toolbox-adk/README.md) | ![npm](https://img.shields.io/npm/v/@toolbox-sdk/adk) |
+
+
+## Getting Started
+
+To get started using Toolbox tools with an application, follow these general steps:
+
+1. **Set up and Run the Toolbox Service:**
+
+    Before using the SDKs, you need the main MCP Toolbox service running. Follow
+    the instructions here: [**Toolbox Getting Started
+    Guide**](https://github.com/googleapis/mcp-toolbox?tab=readme-ov-file#getting-started)
+
+2. **Install the Appropriate SDK:**
+
+    Choose the package based on your needs (see "[Which Package Should I Use?](#which-package-should-i-use)" above) and install it:
+
+    ```bash
+    # For the core, framework-agnostic SDK
+    npm install @toolbox-sdk/core
+
+    # For ADK applications
+    npm install @toolbox-sdk/adk
+    ```
+
+
+
+{{< notice note >}}
+Source code for [js-sdk](https://github.com/googleapis/mcp-toolbox-sdk-js)
+{{< /notice >}}
 
 
 
@@ -8096,17 +8259,72 @@ await ai.generate({
 
 
 
-<html>
-  <head>
-    <title>Redirecting to the Go SDK API reference</title>
-    <link rel="canonical" href="https://go.mcp-toolbox.dev"/>
-    <meta http-equiv="refresh" content="0;url=https://go.mcp-toolbox.dev"/>
-  </head>
-  <body>
-    <p>If you are not automatically redirected, please <a href="https://go.mcp-toolbox.dev">follow this link to the Go SDK API reference</a>.</p>
-  </body>
-</html>
+## Overview
 
+The MCP Toolbox service provides a centralized way to manage and expose tools
+(like API connectors, database query tools, etc.) for use by GenAI applications.
+
+The Go SDK act as clients for that service. They handle the communication needed to:
+
+* Fetch tool definitions from your running Toolbox instance.
+* Provide convenient Go structs representing those tools.
+* Invoke the tools (calling the underlying APIs/services configured in Toolbox).
+* Handle authentication and parameter binding as needed.
+
+By using the SDK, you can easily leverage your Toolbox-managed tools directly
+within your Go applications or AI orchestration frameworks.
+
+<a class="btn btn-primary" href="https://go.mcp-toolbox.dev" role="button"><i class="fa-brands fa-golang"></i> Go API Reference</a>
+
+## Which Package Should I Use?
+
+Choosing the right package depends on how you are building your application:
+
+- [**`core`**](core/):
+  This is a framework-agnostic way to connect tools to popular frameworks
+  like Google GenAI, LangChain, etc.
+
+- [**`tbadk`**](tbadk/):
+  This package provides a way to connect tools to ADK Go.
+
+- [**`tbgenkit`**](tbgenkit/):
+  This package provides functionality to convert the Tool fetched using the core package
+  into a Genkit Go compatible tool.
+
+## Available Packages
+
+This repository hosts the following Go packages. See the package-specific
+README for detailed installation and usage instructions:
+
+| Package | Target Use Case | Integration | Path | Details (README) |
+| :------ | :----------| :---------- | :---------------------- | :---------- |
+| [`core`](core/) | Framework-agnostic / Custom applications | Use directly / Custom | `core/` | 📄 [View README](https://github.com/googleapis/mcp-toolbox-sdk-go/blob/main/core/README.md) |
+| [`tbadk`](tbadk/) | ADK Go | Use directly | `tbadk/` | 📄 [View README](https://github.com/googleapis/mcp-toolbox-sdk-go/blob/main/tbadk/README.md) |
+| [`tbgenkit`](tbgenkit/) | Genkit Go | Along with core | `tbgenkit/` | 📄 [View README](https://github.com/googleapis/mcp-toolbox-sdk-go/blob/main/tbgenkit/README.md) |
+
+## Getting Started
+
+To get started using Toolbox tools with an application, follow these general steps:
+
+1. **Set up and Run the Toolbox Service:**
+
+    Before using the SDKs, you need the MCP Toolbox server running. Follow
+    the instructions here: [**Toolbox Getting Started
+    Guide**](https://github.com/googleapis/mcp-toolbox?tab=readme-ov-file#getting-started)
+
+2. **Install the Appropriate SDK:**
+
+    Choose the package based on your needs (see "[Which Package Should I Use?](#which-package-should-i-use)" above)
+    Use this command to install the SDK module
+
+    ```bash
+    # For the core, framework-agnostic SDK
+    go get github.com/googleapis/mcp-toolbox-sdk-go
+    ```
+
+{{< notice note >}}
+Source code for [Go-sdk](https://github.com/googleapis/mcp-toolbox-sdk-go)
+{{< /notice >}}
 
 
 
@@ -30511,7 +30729,7 @@ instead of hardcoding your secrets into the configuration file.
 ## Advanced Usage
 
 ### SSRF Protection (SSRF Guard)
-By default, the HTTP source implements strict protection against Server-Side Request Forgery (SSRF) and DNS Rebinding (TOCTOU) attacks. It automatically intercepts, resolves, and blocks connection requests to private IP ranges, loopback ranges (such as `127.0.0.1`), and link-local ranges (e.g. AWS/GCP metadata service at `169.254.169.254`).
+By default, the HTTP source implements strict protection against Server-Side Request Forgery (SSRF) and DNS Rebinding (TOCTOU) attacks. It automatically intercepts, resolves, and blocks connection requests to private IP ranges, loopback ranges (such as `127.0.0.1`), link-local ranges (e.g. AWS/GCP metadata service at `169.254.169.254`), and the RFC 6598 shared address space (`100.64.0.0/10`, commonly used for Kubernetes node and Pod networking).
 
 To override the default protection or block custom ranges, configure `allowPrivateNetworks`, `allowedIpRanges`, and `customBlockedIpRanges`:
 
@@ -38803,7 +39021,7 @@ This tool takes 2 optional input parameters:
 
 - `min_duration_secs` (optional): Only show queries running for at least this
   long in seconds, default `0`.
-- `limit` (optional):  max number of queries to return, default `10`.
+- `limit` (optional):  max number of queries to return, default `100`.
 
 ## Compatible Sources
 
@@ -38816,7 +39034,7 @@ kind: tool
 name: list_active_queries
 type: mysql-list-active-queries
 source: my-mysql-instance
-description: Lists top N (default 10) ongoing queries from processlist and innodb_trx, ordered by execution time in descending order. Returns detailed information of those queries in json format, including process id, query, transaction duration, transaction wait duration, process time, transaction state, process state, username with host, transaction rows locked, transaction rows modified, and db schema.
+description: Lists top N (default 100) ongoing queries from processlist and innodb_trx, ordered by execution time in descending order. Returns detailed information of those queries in json format, including process id, query, transaction duration, transaction wait duration, process time, transaction state, process state, username with host, transaction rows locked, transaction rows modified, and db schema.
 ```
 
 The response is a json array with the following fields:
@@ -41670,7 +41888,7 @@ tool takes the following input parameters:
 
 - `schema_name` (optional): A text to filter results by schema name. Default: `""`
 - `owner` (optional): A text to filter results by owner name. Default: `""`
-- `limit` (optional): The maximum number of rows to return. Default: `50`.
+- `limit` (optional): The maximum number of rows to return. Default: `10`.
 
 ## Compatible Sources
 
@@ -44247,7 +44465,6 @@ instead of hardcoding your secrets into the configuration file.
 | schema    |  string  |     true     | Name of the schema to use (e.g. "my_schema").                          |
 | warehouse |  string  |     false    | The virtual warehouse to use. Defaults to "COMPUTE_WH".                |
 | role      |  string  |     false    | The security role to use. Defaults to "ACCOUNTADMIN".                  |
-| timeout   |  integer |     false    | The connection timeout in seconds. Defaults to 60.                     |
 
 
 
@@ -47986,6 +48203,32 @@ MCP Toolbox and [Google Cloud MCP Servers](https://cloud.google.com/blog/product
 
 - **Google Cloud MCP Servers** provides a managed, enterprise-grade experience with necessary stability and governance, offering a "Zero Ops" experience ideal for **[Build-Time Developers ("AI-Assisted")](../documentation/getting-started/_index.md#build-time-vs-runtime-implementation)** who need immediate, secure integration with Google Cloud services without any setup.
 - **MCP Toolbox** is open-source and self-hosted, allowing for rapid prototyping. It is designed for **[Run-Time Developers](../documentation/getting-started/_index.md#build-time-vs-runtime-implementation)** who need to build custom agents/applications, deploy custom tools, and connect to non-Google or on-premises data sources. MCP Toolbox is focused on delivering the most up to date and cutting-edge features quickly before they might be available in managed environments.
+
+
+
+
+========================================================================
+## Toolbox Client SDK API Reference
+========================================================================
+**Hierarchy:** MCP Toolbox for Databases > Reference > Toolbox Client SDK API Reference
+**URL:** https://mcp-toolbox.dev/dev/reference/sdk-api-reference/
+**Description:** Auto-generated API reference sites for the MCP Toolbox client SDKs.
+
+
+
+Each MCP Toolbox client SDK publishes an auto-generated API reference site
+documenting its public classes, functions, and types. Use these when you need the
+exact signatures and symbol-level details for a package.
+
+For usage guides, quickstarts, and framework-specific examples, see
+[Toolbox SDKs](../documentation/connect-to/toolbox-sdks/_index.md).
+
+| Language | API Reference | Source |
+| :--- | :--- | :--- |
+| <i class="fa-brands fa-python"></i> Python | [py.mcp-toolbox.dev](https://py.mcp-toolbox.dev) | [mcp-toolbox-sdk-python](https://github.com/googleapis/mcp-toolbox-sdk-python) |
+| <i class="fa-brands fa-js"></i> JavaScript / TypeScript | [js.mcp-toolbox.dev](https://js.mcp-toolbox.dev) | [mcp-toolbox-sdk-js](https://github.com/googleapis/mcp-toolbox-sdk-js) |
+| <i class="fa-brands fa-golang"></i> Go | [go.mcp-toolbox.dev](https://go.mcp-toolbox.dev) | [mcp-toolbox-sdk-go](https://github.com/googleapis/mcp-toolbox-sdk-go) |
+| <i class="fa-brands fa-java"></i> Java | _No dedicated site yet_ | [mcp-toolbox-sdk-java](https://github.com/googleapis/mcp-toolbox-sdk-java) |
 
 
 
